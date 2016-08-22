@@ -1,10 +1,11 @@
 package ic.ufal.br.cclonela;
 
+
 public class Token {
-	int categ;
+	Categories categ;
 	String value;
 	
-	public Token(String value, int categ){
+	public Token(String value, Categories categ){
 		this.value = value;
 		this.categ = categ;
 	}
