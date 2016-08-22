@@ -65,6 +65,9 @@ public class Analyzer {
 		else if(token.equals("=")){
 			categ = Categories.opAtr;
 		}
+		else if(token.equals("int")){
+			categ = Categories.prInt;
+		}		
 		else if(token.equals("float")){
 			categ = Categories.prFloat;
 		}
@@ -95,6 +98,9 @@ public class Analyzer {
 		else if(token.equals("main")){
 			categ = Categories.prMain;
 		}
+		else if(token.equals("return")){
+			categ = Categories.prRet;
+		}		
 		else if(token.equals("(")){
 			categ = Categories.abPar;
 		}
