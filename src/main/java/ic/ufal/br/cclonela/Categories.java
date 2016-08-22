@@ -41,5 +41,6 @@ public enum Categories {
 	abCh,
 	fcCh,
 	sep,
+	esp,
 	unknown
 }

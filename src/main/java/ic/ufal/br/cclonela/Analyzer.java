@@ -28,41 +28,51 @@ public class Analyzer {
     	}
 	}
 	
+	
+	// E aqui
 	private Character nextChar(){
-		line = linesList.get(currentLine);
-		currentColumn++;
 		
-		if (currentColumn < line.length()) {
-			return line.charAt(currentColumn);
+		if(currentLine < linesList.size()){
+			line = linesList.get(currentLine);
+			
+			if (currentColumn < line.length()) {
+				return line.charAt(currentColumn++);
+			}
+			else {
+				System.out.println("entrou");
+				currentColumn = 0;
+				currentLine++;
+				return LINE_BREAK;
+			}
 		}
-		else if(currentLine < linesList.size()){
-			currentColumn = 0;
-			currentLine++;
-			return LINE_BREAK;
-		}
-		else{
-			return '\0';
-		}
+		
+		return '\0';	
 	}
 
+	
+	// TODO: consertar bug de não avaliar segunda linha do arquivo de teste
 	public Token nextToken(){
 		char currentChar;
 		String token = "";
 		Token nextToken;
 		Categories categ;
-		
+				
 		do{
 			currentChar = nextChar();
 			token += currentChar;
 			categ = tokenCateg(token);
 		}
-		while(categ == Categories.unknown && currentChar !='\0');
+		while(categ == Categories.unknown && currentChar != '\0');
 			
 		nextToken = new Token(token, categ, currentLine, currentColumn);
 		
+		// Possivelmente aqui
 		if(currentChar == '\0'){
 			nextToken = null;
 		}
+		//if(currentChar == '\0'){
+			//nextToken = null;
+		//}
 			
 		return nextToken;
 	}
@@ -175,7 +185,10 @@ public class Analyzer {
 		else if(token.equals(";") || token.equals(",")){
 			return Categories.sep;
 		}
-		else if(token.matches("\\w\\(w|d)*")){
+		else if(token.equals(" ")){
+			return Categories.esp;
+		}
+		else if(token.matches("\\w(\\w|\\d)*")){
 			return Categories.id;
 		}
 		else if(token.matches("-?\\d+")){

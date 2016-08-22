@@ -10,7 +10,7 @@ public class Test
     	Analyzer lexicalAnalyzer = new Analyzer("C:\\Backup\\dev\\code\\cclonela\\teste.txt");
     	lexicalAnalyzer.readFile();
     	
-    	Token token = lexicalAnalyzer.nextToken();    	
+    	Token token = lexicalAnalyzer.nextToken();
     	while(token != null){
     		System.out.println(token.toString());
         	token = lexicalAnalyzer.nextToken();
