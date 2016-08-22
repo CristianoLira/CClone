@@ -1,4 +1,26 @@
-int main(int 10.1, float b){
-	outCChar("Hello world!");
-	return 0;
+void fib(int n){                                          
+   	 int i, fib1 = 1, fib2 = 1, sum;    
+	#test
+if(n > 0){
+	outInt(1);
 }
+if(n > 1){
+	outChar(‘,’);
+outInt(1);
+}
+  	   for (i = 3; n; 1){                  
+   		    sum = fib1 + fib2;                    
+   		    fib1 = fib2;                           
+   		    fib2 = sum; 
+                outChar(‘,’);
+                outInt(fib2);          
+  	  }                                                                       
+   }                                          
+   
+   int main(void)
+   {
+    	int n;
+    	n = inInt();
+   	fib(n);
+    	return 0;
+   }

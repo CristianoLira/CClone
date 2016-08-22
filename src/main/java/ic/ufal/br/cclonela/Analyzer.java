@@ -61,6 +61,13 @@ public class Analyzer {
 		int column = 0;
 		do{
 			currentChar = nextChar();
+			if(currentChar == '#'){
+				currentColumn = 0;
+				currentLine++;
+				currentChar = nextChar();
+			}
+				
+			
 			if(column == 0)
 				column = this.currentColumn;
 			
@@ -83,7 +90,7 @@ public class Analyzer {
 			}
 			else if((currentChar == '(' || currentChar == ')' || currentChar == '['
 					 || currentChar == ']' || currentChar == ',' 
-					 || currentChar == ';' || currentChar == '+' || currentChar == '-'
+					 || currentChar == ';' || currentChar == '+'
 					 || currentChar == '*' || currentChar == '/'
 					 ) && token.length() == 0){
 				
@@ -247,13 +254,13 @@ public class Analyzer {
 		}
 		
 		
-		else if(token.matches("-\\d+(.\\d+)?")){
+		else if(token.matches("-?\\d+(.\\d+)?")){
 			return Categories.cteFloat;
 		}
 		else if(token.matches("\"(\\d|\\w|\\s)?\"")){
 			return Categories.cteCh;
 		}
-		else if(token.matches("\"(\\d|\\w|\\s)*\"")){
+		else if(token.matches("\".*\"")){
 			return Categories.cteStr;
 		}else if(token.matches("\\w(\\w|\\d)*")){
 			return Categories.id;
