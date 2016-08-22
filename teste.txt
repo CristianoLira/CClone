@@ -1,2 +1,4 @@
-(teste 123
-)123 teste
+int main(int 10.1, float b){
+	outCChar(“Hello world!”);
+	return 0;
+}

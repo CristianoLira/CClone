@@ -16,7 +16,7 @@ public class Analyzer {
 	private final char LINE_BREAK = '\n';
 	
 	public Analyzer(String filePath){
-		linesList = new ArrayList<>();
+		linesList = new ArrayList<String>();
 		this.filePath = filePath;
 		this.currentLine = 0;
 		this.currentColumn = 0;
@@ -59,11 +59,47 @@ public class Analyzer {
 				
 		do{
 			currentChar = nextChar();
-			token += currentChar;
-			categ = tokenCateg(token);
-		}
-		while(categ == Categories.unknown && currentChar != '\0');
 			
+			if(currentChar == '“'){
+				while(currentChar != '”'){
+					token += currentChar;
+					currentChar = nextChar();
+				}
+			}
+			else if((currentChar == ' ' || currentChar == '	' || currentChar == '\n') && token.length() > 0){
+				categ = tokenCateg(token);
+				
+				break;
+			}
+			else if((currentChar == '(' || currentChar == ')' || currentChar == '['
+					 || currentChar == ']' || currentChar == ',' 
+					 || currentChar == ';' ) && token.length() == 0){
+				
+				token += currentChar;
+				categ = tokenCateg(token);
+				
+				break;
+			}
+			else if((currentChar == '(' || currentChar == ')' || currentChar == '['
+					 || currentChar == ']' || currentChar == ','
+					 || currentChar == ';') && token.length() > 0){
+				
+				categ = tokenCateg(token);
+				this.currentColumn --;
+				break;
+			}
+			
+			if(currentChar != '\n' && currentChar != ' ' && currentChar != '	'){
+				token += currentChar;
+				categ = tokenCateg(token);
+				
+			}else{
+				categ = tokenCateg(token);
+				
+			}
+		}
+		while(currentChar != '\0');
+		
 		nextToken = new Token(token, categ, currentLine, currentColumn);
 		
 		// Possivelmente aqui
@@ -187,13 +223,11 @@ public class Analyzer {
 		}
 		else if(token.equals(" ")){
 			return Categories.esp;
-		}
-		else if(token.matches("\\w(\\w|\\d)*")){
-			return Categories.id;
-		}
-		else if(token.matches("-?\\d+")){
+		}else if(token.matches("-?\\d+")){
 			return Categories.cteInt;
 		}
+		
+		
 		else if(token.matches("-\\d+(.\\d+)?")){
 			return Categories.cteFloat;
 		}
@@ -202,6 +236,8 @@ public class Analyzer {
 		}
 		else if(token.matches("\"(\\d|\\w|\\s)*\"")){
 			return Categories.cteStr;
+		}else if(token.matches("\\w(\\w|\\d)*")){
+			return Categories.id;
 		}
 		else{
 			//System.out.println("Token não reconhecido.");

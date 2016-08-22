@@ -7,7 +7,7 @@ public class Test
 	
     public static void main(String[] args) throws IOException {
       	
-    	Analyzer lexicalAnalyzer = new Analyzer("C:\\Backup\\dev\\code\\cclonela\\teste.txt");
+    	Analyzer lexicalAnalyzer = new Analyzer("teste.txt");
     	lexicalAnalyzer.readFile();
     	
     	Token token = lexicalAnalyzer.nextToken();
