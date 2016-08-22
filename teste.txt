@@ -1,4 +1,4 @@
 int main(int 10.1, float b){
-	outCChar(“Hello world!”);
+	outCChar("Hello world!");
 	return 0;
 }

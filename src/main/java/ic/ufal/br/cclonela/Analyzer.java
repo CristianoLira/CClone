@@ -9,7 +9,7 @@ import java.util.List;
 public class Analyzer {
 	
 	private List<String> linesList;
-	private int currentLine, currentColumn;
+	private int currentLine, currentColumn, lastColumn;
 	private String line;
 	private String filePath;
 	
@@ -39,7 +39,8 @@ public class Analyzer {
 				return line.charAt(currentColumn++);
 			}
 			else {
-				System.out.println("entrou");
+				
+				lastColumn = currentColumn;
 				currentColumn = 0;
 				currentLine++;
 				return LINE_BREAK;
@@ -56,24 +57,35 @@ public class Analyzer {
 		String token = "";
 		Token nextToken;
 		Categories categ;
-				
+		boolean flag = false;
+		int column = 0;
 		do{
 			currentChar = nextChar();
+			if(column == 0)
+				column = this.currentColumn;
 			
-			if(currentChar == '“'){
-				while(currentChar != '”'){
+			if(currentChar == '"'){
+				token += currentChar;
+				currentChar = nextChar();
+				while(currentChar != '"'){
 					token += currentChar;
 					currentChar = nextChar();
 				}
 			}
 			else if((currentChar == ' ' || currentChar == '	' || currentChar == '\n') && token.length() > 0){
+				if(currentChar == '\n'){
+					flag = true;
+				}
+					
 				categ = tokenCateg(token);
 				
 				break;
 			}
 			else if((currentChar == '(' || currentChar == ')' || currentChar == '['
 					 || currentChar == ']' || currentChar == ',' 
-					 || currentChar == ';' ) && token.length() == 0){
+					 || currentChar == ';' || currentChar == '+' || currentChar == '-'
+					 || currentChar == '*' || currentChar == '/'
+					 ) && token.length() == 0){
 				
 				token += currentChar;
 				categ = tokenCateg(token);
@@ -82,7 +94,8 @@ public class Analyzer {
 			}
 			else if((currentChar == '(' || currentChar == ')' || currentChar == '['
 					 || currentChar == ']' || currentChar == ','
-					 || currentChar == ';') && token.length() > 0){
+					 || currentChar == ';'|| currentChar == '+' || currentChar == '-'
+					 || currentChar == '*' || currentChar == '/') && token.length() > 0){
 				
 				categ = tokenCateg(token);
 				this.currentColumn --;
@@ -94,13 +107,19 @@ public class Analyzer {
 				categ = tokenCateg(token);
 				
 			}else{
+				column = 0;
 				categ = tokenCateg(token);
 				
 			}
 		}
 		while(currentChar != '\0');
+		if(flag){
+			nextToken = new Token(token, categ, currentLine, lastColumn);
+			flag = false;
+		}else{
+			nextToken = new Token(token, categ, currentLine + 1, column);
+		}
 		
-		nextToken = new Token(token, categ, currentLine, currentColumn);
 		
 		// Possivelmente aqui
 		if(currentChar == '\0'){
@@ -119,7 +138,7 @@ public class Analyzer {
 		if(token.equals("+")){
 			return Categories.opAd;
 		}
-		else if(token.equals("­")){
+		else if(token.equals("-")){
 			return Categories.opSub;
 		}
 		else if(token.equals("++") || token.equals("--")){
