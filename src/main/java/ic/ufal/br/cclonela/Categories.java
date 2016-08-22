@@ -40,5 +40,6 @@ public enum Categories {
 	fcCol,
 	abCh,
 	fcCh,
-	sep
+	sep,
+	unknown
 }
