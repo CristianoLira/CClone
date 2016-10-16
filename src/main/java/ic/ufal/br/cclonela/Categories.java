@@ -23,6 +23,7 @@ public enum Categories {
 	opDif,
 	opAtr,
 	prInt,
+	prVoid,
 	prFloat,
 	prChar,
 	prBool,

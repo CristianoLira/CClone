@@ -29,5 +29,12 @@ public class Token {
 	public int getColumn(){
 		return this.column;
 	}
+
+	public Categories getCateg() {
+		return categ;
+	}
+
+	
+	
 	
 }

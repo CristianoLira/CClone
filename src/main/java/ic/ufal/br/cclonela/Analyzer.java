@@ -220,6 +220,9 @@ public class Analyzer {
 		else if(token.equals("for")){
 			return Categories.prFor;
 		}
+		else if(token.equals("void")){
+			return Categories.prVoid;
+		}
 		else if(token.equals("main")){
 			return Categories.prMain;
 		}
