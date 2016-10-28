@@ -12,17 +12,20 @@ public class Test
     	Analyzer lexicalAnalyzer = new Analyzer("teste.txt");
     	lexicalAnalyzer.readFile();
     	LinkedList<Token> ll = new LinkedList<Token>();
-    	Parser parser = new Parser(lexicalAnalyzer, ll);
+    	Parser parser = new Parser(lexicalAnalyzer);
     	Token token = lexicalAnalyzer.nextToken();
-    	while(token != null){
-    		ll.add(token);
-        	token = lexicalAnalyzer.nextToken();
-    	}
-    	if(parser.syntaxAnalisys()){
-    		System.out.println("Tudo ok");
-    	}else{
-    		System.out.println("erro");
-    	}
+    	
+//    	while(token != null){
+//    		ll.add(token);
+//        	token = lexicalAnalyzer.nextToken();
+//    	}
+//    	if(parser.syntaxAnalisys()){
+//    		System.out.println("Tudo ok");
+//    	}else{
+//    		System.out.println("erro");
+//    	}
+    	
+    	parser.start();
     	
     }
 

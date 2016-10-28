@@ -2,159 +2,406 @@ package ic.ufal.br.cclonela;
 
 import java.util.LinkedList;
 
+
 public class Parser {
 	protected Analyzer lexicalAnalyzer;
-	protected LinkedList<Token> ll;
-	
-	public Parser(Analyzer analyzer, LinkedList<Token> ll) {
+	private Token token;
+	//protected LinkedList<Token> ll;
+
+	public Parser(Analyzer analyzer) {
 		this.lexicalAnalyzer = analyzer;
-		this.ll = ll;
+		//this.ll = ll;
 	}
 	
-	public boolean syntaxAnalisys(){
-		return program();
+	void nextToken(){
+		token = lexicalAnalyzer.nextToken();
+	}
+
+	void start(){
+		nextToken();
+		program();
 	}
 	
-	public boolean program(){
+	void error(int id){
+		System.out.println("erro" + id);
+		System.exit(id);
+	}
+
+	void program(){
+		//return this.mainFunc();
+		functions();
+		mainFunc();
+
+	}
+
+	void functions(){
+		returnType();
 		
-			return this.mainFunc();
-		
-		
+		if(token.categ == Categories.id){
+			nextToken();
+			param();
+			scope();
+			functions();
+		}
+		else return;
 		
 	}
 	
-	public boolean functions(){
+	void mainFunc(){
+		returnType();
 		
-		if(returnType()){
-			if(ll.getFirst().getCateg() == Categories.id){
-				Token token;
-				token = ll.getFirst();
-				ll.removeFirst();
-				
-				if(param()){
-					if(scope()){
-						if(functions()){
-							return true;
-						}
-					}
-					
-				}else{
-					ll.addFirst(token);
-				}
-				
+		if(token.categ == Categories.prMain){
+			nextToken();
+			param();
+			scope();
+		}
+		else error(1);
+	
+	}
+	
+	void returnType(){
+		if(token.categ == Categories.prVoid){
+			nextToken();
+		}
+		else {
+			type();
+			//returnType2();
+		}
+
+	}
+
+	void param(){
+		if(token.categ == Categories.abPar){
+			nextToken();
+			param2();
+		}
+	}
+	
+	void param2(){
+		if(token.categ == Categories.prVoid){
+			nextToken();
+		}
+		else {
+			paramList();
+		}
+		if(token.categ != Categories.fcPar){
+			nextToken();
+			error(-1);
+		}
+		
+	}
+	
+	void id(){
+		if(token.categ == Categories.id){
+			nextToken();
+			id2();
+		}
+		
+		else error(-1);
+	}
+	
+	void id2(){
+		if(token.categ == Categories.abCol){
+			nextToken();
+			exp();
+			if(token.categ == Categories.fcCol)
+				nextToken();
+			else error(-1);
+		}
+		else return;
+	}
+	
+	void paramList(){
+		type();
+		id();
+		paramList2();
+	}
+	
+	void paramList2(){
+		if(token.categ == Categories.sep){
+			nextToken();
+			paramList();
+		}
+		else return;
+	}
+	
+	void type(){
+			if(token.categ == Categories.prBool || 
+					token.categ == Categories.prChar ||
+					token.categ == Categories.prInt ||
+					token.categ == Categories.prFloat){
+				nextToken();
+				type2();
 			}
-		}
-		
-		return true;
-		
-		
+			else error(-1);
 	}
-	public boolean mainFunc(){
-		if(returnType()){
-			if(ll.getFirst().getCateg() == Categories.prMain){
-				ll.removeFirst();
-				if(param()){
-					if(scope()){
-						return true;
-						
-					}else{
-						System.out.println("1");
-						return false;
-						
-					}
-					
-				}else{
-					System.out.println("2");
-					return false;
-				}
-				
-			}else{
-				System.out.println(ll.getFirst().getCateg());
-				System.out.println("3");
-				return false;
-			}
-		}else{
-			System.out.println("4");
-			return false;
+	
+	void type2(){
+		if(token.categ == Categories.abCol){
+			nextToken();
+			if(token.categ == Categories.fcCol)
+				nextToken();
+			else error(-1);
 		}
-		
-		
+		else return;
 	}
-	public boolean returnType(){
-		
-		if(ll.getFirst().getCateg() == Categories.prVoid){
-			ll.removeFirst();
-			return true;
+
+	void scope(){
+		if(token.categ == Categories.abCh){
+			nextToken();
+			cmd();
+			if(token.categ != Categories.fcCh)
+				error(-1);
 		}
-		if(type()){
-			return true;
-		}else{
-			System.out.println("5");
-			return false;
-		}
-		
+		else error(-1);
 	}
-	public boolean type(){
-		if(ll.getFirst().getCateg() == Categories.prBool || 
-				ll.getFirst().getCateg() == Categories.prChar ||
-				ll.getFirst().getCateg() == Categories.prInt ||
-				ll.getFirst().getCateg() == Categories.prFloat){
-			ll.removeFirst();
-			return true;
-		}
+	
+	void scope2(){
+		if(token.categ == Categories.fcCh)
+			nextToken();
 		else{
-			System.out.println("6");
-			return false;
+			cmd();
+			scope2();
 		}
 	}
 	
-	public boolean param(){
-		if(ll.getFirst().getCateg() == Categories.abPar){
-			ll.removeFirst();
-			if(param2()){
-				return true;
-			}else{
-				System.out.println("7");
-				return false;
-			}
-		}else{
-			System.out.println("8");
-			return false;
+	void cmd(){
+		if(token.categ == Categories.prBool || 
+				token.categ == Categories.prChar ||
+				token.categ == Categories.prInt ||
+				token.categ == Categories.prFloat)
+			declarationCmd();
+		else if(token.categ == Categories.id)
+			cmd2();
+		else if(token.categ == Categories.prIf)
+			ifelseCmd();
+		else if(token.categ == Categories.prWhile)
+			whileCmd();
+		else if(token.categ == Categories.prFor)
+			forCmd();
+		else if(token.categ == Categories.prRet)
+			returnCmd();
+		else error(-1);
+	}
+	
+	void cmd2(){
+		if(token.categ == Categories.abPar)
+			funccallCmd();
+		else{
+			id2();
+			attrCmd();
 		}
 	}
-	public boolean param2(){
-		if(ll.getFirst().getCateg() == Categories.prVoid){
+	
+	void declarationCmd(){
+		type();
+		declarationCmd2();
+	}
+	
+	void declarationCmd2(){
+		if(token.categ == Categories.id){
+			nextToken();
+			declarationCmd3();
+		}
+		else if(token.categ == Categories.abCol)
+			arrayDec();
+		else error(-1);
+	}
+	
+	void declarationCmd3(){
+		if(token.categ == Categories.opAtr){
+			//atribuição é operador
+			attrCmd();
+		}
+		else return;
+	}
+	
+	void arrayDec(){
+		if(token.categ == Categories.abCol){
+			nextToken();
+			exp();
+			if(token.categ == Categories.fcCol)
+				nextToken();
+			else error(-1);
 			
-			ll.removeFirst();
-			if(ll.getFirst().getCateg() == Categories.fcPar){
-				ll.removeFirst();
-				return true;
-			}else{
-				System.out.println("9");
-				return false;
-			}
+			if(token.categ == Categories.id)
+				nextToken();
+			else error(-1);
+			
+			arrayDec2();
 		}
-		System.out.println(ll.getFirst().toString());
-		System.out.println("10");
-		return false;
-	}
-	public boolean scope(){
-		if(ll.getFirst().getCateg() == Categories.abCh){
-			ll.removeFirst();
-			if(ll.getFirst().getCateg() == Categories.fcCh){
-				return true;
-			}else{
-				System.out.println("11");
-				return false;
-			}
-		}else{
-			System.out.println("12");
-			return false;
-		}
+		else error(-1);
 	}
 	
+	void arrayDec2(){
+		if(token.categ == Categories.opAtr)
+			arrayAttrCmd();
+		else return;
+	}
 	
+	void attrCmd(){
+		if(token.categ == Categories.opAtr)
+			exp();
+		else error(-1);
+	}
 	
+	void arrayAttrCmd(){
+		if(token.categ == Categories.opAtr)
+			arrayInit();
+		else error(-1);
+	}
+	
+	void arrayInit(){
+		if(token.categ == Categories.abCh){
+			nextToken();
+			elem();
+			if(token.categ == Categories.fcCh)
+				nextToken();
+			else error(-1);
+		}
+		else error(-1);
+	}
+	
+	void elem(){
+		if(token.categ == Categories.id){
+			id();
+		}
+		else exp();
+		
+		elem2();
+	}
+	
+	void elem2(){
+		if(token.categ == Categories.sep){
+			nextToken();
+			elem();
+		}
+		else return;
+	}
+	
+	void constant(){
+		if(token.categ == Categories.cteCh ||
+				token.categ == Categories.cteFloat ||
+				token.categ == Categories.cteInt ||
+				token.categ == Categories.cteStr){
+			nextToken();
+		}
+		else error(-1);
+	}
+	
+	void funccallCmd(){
+		if(token.categ == Categories.abPar){
+			nextToken();
+			funccallParamList();
+			if(token.categ == Categories.fcPar)
+				nextToken();
+			else error(-1);
+		}
+		else error(-1);
+	}
+	
+	void funccallParamList(){
+		funccallParam();
+		funccallParamList2();
+	}
+	
+	void funccallParamList2(){
+		if(token.categ == Categories.sep){
+			nextToken();
+			funccallParamList();
+		}
+		else return;
+	}
+	
+	void funccallParam(){
+		if(token.categ == Categories.id)
+			id();
+		else exp();
+	}
+	
+	void ifelseCmd(){
+		ifCmd();
+		elseifCmd();
+		elseCmd();
+		
+	}
+	
+	void ifCmd(){
+		if(token.categ == Categories.prIf){
+			nextToken();
+			if(token.categ == Categories.abPar){
+				nextToken();
+				exp();
+				if(token.categ == Categories.fcPar){
+					nextToken();
+					scope();
+				}
+				else error(-1);
+			}
+			else error(-1);
+		}
+		else error(-1);
+	}
+	
+	void elseifCmd(){
+		if(token.categ == Categories.prElse){
+			nextToken();
+			elseifCmd2();
+		}
+		else error(-1);
+	}
+	
+	void elseifCmd2(){
+		if(token.categ == Categories.prIf){
+			ifCmd();
+			elseifCmd();
+		}
+		else if(token.categ == Categories.abCh)
+			elseCmd();
+		else error(-1);
+	}
+	
+	void elseCmd(){
+		scope();
+	}
+	
+	void whileCmd(){
+		if(token.categ == Categories.prWhile){
+			nextToken();
+			if(token.categ == Categories.abPar){
+				nextToken();
+				exp();
+				if(token.categ == Categories.fcPar)
+					scope();
+				else error(-1);
+			}
+			else error(-1);
+		}
+		else error(-1);
+	}
+	
+	void forCmd(){
+		if(token.categ == Categories.prFor){
+			
+		}
+		else error(-1);
+	}
+	
+	void returnCmd(){
+		if(token.categ == Categories.prRet){
+			returnCmd2();
+		}
+		else error(-1);
+	}
+	
+	void returnCmd2(){
+		if(token.categ == Categories.id)
+			id();
+		else exp();
+		
+		if(token.categ == Categories.term)
+			nextToken();
+		else error(-1);
+	}
+
 }
-
-

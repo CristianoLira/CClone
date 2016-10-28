@@ -247,7 +247,10 @@ public class Analyzer {
 		else if(token.equals("}")){
 			return Categories.fcCh;
 		}
-		else if(token.equals(";") || token.equals(",")){
+		else if(token.equals(";")){
+			return Categories.term;
+		}
+		else if(token.equals(",")){
 			return Categories.sep;
 		}
 		else if(token.equals(" ")){
