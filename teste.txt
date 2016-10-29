@@ -1,3 +1,28 @@
-int main(void){
+void fib(int n){                                          
+   	 int i; 
+   	 int fib1;
+   	 int fib2; int sum;    
+	fib1 = 1;
+	fib2 = 1;
+if(n > 0){
 	
 }
+if(n > 1){
+	
+
+}
+  	   for (i = 3; n; 1){                  
+   		    sum = fib1 + fib2;                    
+   		    fib1 = fib2;                           
+   		    fib2 = sum; 
+                          
+  	  }                                                                       
+   }                                          
+   
+   int main(void)
+   {
+    	int n;
+    	n = inInt();
+   	fib(n);
+    	return 0;
+   }

@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class Analyzer {
 	
 	private List<String> linesList;
@@ -120,6 +122,8 @@ public class Analyzer {
 			}
 		}
 		while(currentChar != '\0');
+		if(token.equals(""))
+			categ = Categories.EOF;
 		if(flag){
 			nextToken = new Token(token, categ, currentLine, lastColumn);
 			flag = false;

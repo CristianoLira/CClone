@@ -13,7 +13,6 @@ public class Test
     	lexicalAnalyzer.readFile();
     	LinkedList<Token> ll = new LinkedList<Token>();
     	Parser parser = new Parser(lexicalAnalyzer);
-    	Token token = lexicalAnalyzer.nextToken();
     	
 //    	while(token != null){
 //    		ll.add(token);

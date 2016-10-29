@@ -44,5 +44,6 @@ public enum Categories {
 	term,
 	sep,
 	esp,
-	unknown
+	unknown,
+	EOF
 }
