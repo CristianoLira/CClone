@@ -1,6 +1,5 @@
 package ic.ufal.br.cclonela;
 
-import java.util.LinkedList;
 
 public class Parser {
 	protected Analyzer lexicalAnalyzer;
@@ -420,9 +419,10 @@ public class Parser {
 			attrCmd();
 		} else
 			error(16);
+		
 		if(token.categ == Categories.term){
 			nextToken();
-		}
+		} else error(40);
 	}
 
 	void declarationCmd() {
@@ -555,13 +555,17 @@ public class Parser {
 		System.out.println(token.categ);
 		if (token.categ == Categories.abPar) {
 			nextToken();
+			funccallCmd2();
+		} else error(26);
+	}
+	
+	void funccallCmd2() {
+		if(token.categ != Categories.fcPar)
 			funccallParamList();
-			if (token.categ == Categories.fcPar)
-				nextToken();
-			else
-				error(26);
-		} else
-			error(27);
+		
+		if (token.categ == Categories.fcPar)
+			nextToken();
+		else error(27);
 	}
 
 	void funccallParamList() {
@@ -591,7 +595,6 @@ public class Parser {
 		System.out.println(token.categ);
 		ifCmd();
 		elseifCmd();
-		elseCmd();
 
 	}
 
@@ -620,16 +623,16 @@ public class Parser {
 		if (token.categ == Categories.prElse) {
 			nextToken();
 			elseifCmd2();
-		} else
-			error(31);
+		} else return;
 	}
 
 	void elseifCmd2() {
 		System.out.println("elseifcmd2");
 		System.out.println(token.categ);
 		if (token.categ == Categories.prIf) {
-			ifCmd();
-			elseifCmd();
+			ifelseCmd();
+			//ifCmd();
+			//elseifCmd();
 		} else if (token.categ == Categories.abCh)
 			elseCmd();
 		else
@@ -664,7 +667,29 @@ public class Parser {
 		System.out.println("forcmd");
 		System.out.println(token.categ);
 		if (token.categ == Categories.prFor) {
-
+			nextToken();
+			if(token.categ == Categories.abPar){
+				nextToken();
+				if(token.categ == Categories.id)
+					nextToken();
+				else error(46);
+				attrCmd();
+				if(token.categ == Categories.term)
+					nextToken();
+				else error(42);
+				exp();
+				if(token.categ == Categories.term)
+					nextToken();
+				else error(43);
+				if(token.categ == Categories.cteInt)
+					nextToken();
+				else error(44);
+				if(token.categ == Categories.fcPar)
+					nextToken();
+				else error(45);
+				scope();
+			}
+			else error(41);
 		} else
 			error(36);
 	}
