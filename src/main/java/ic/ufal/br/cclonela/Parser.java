@@ -3,11 +3,9 @@ package ic.ufal.br.cclonela;
 public class Parser {
 	protected Analyzer lexicalAnalyzer;
 	private Token token;
-	// protected LinkedList<Token> ll;
 
 	public Parser(Analyzer analyzer) {
 		this.lexicalAnalyzer = analyzer;
-		// this.ll = ll;
 	}
 
 	void nextToken() {
@@ -16,17 +14,15 @@ public class Parser {
 
 	void start() {
 		nextToken();
-		System.out.println(token.getValue());
 		program();
 	}
 
 	void error(int id) {
-		System.out.println("erro" + id);
+		System.out.println("erro " + id);
 		System.exit(id);
 	}
 
 	void program() {
-		// return this.mainFunc();
 		System.out.println("PROGRAM -> FUNCTIONS");
 		functions();
 
@@ -41,7 +37,7 @@ public class Parser {
 
 	void functions2() {
 		if (token.categ == Categories.id) {
-			System.out.println("FUNCTIONS2 -> 'id' (" + token.getValue() + ") PARAM SCOPE FUNCTIONS");
+			System.out.println("FUNCTIONS2 -> ‘id’ (" + token.getValue() + ") PARAM SCOPE FUNCTIONS");
 			nextToken();
 			param();
 			scope();
@@ -57,16 +53,14 @@ public class Parser {
 	}
 
 	void returnType() {
-
 		if (token.categ == Categories.prVoid) {
-			System.out.println("RETURNTYPE -> void");
+			System.out.println("RETURNTYPE -> ‘prVoid’(void)");
 			nextToken();
 		} else {
 			System.out.println("RETURNTYPE -> TYPE TYPE2");
 			type();
 			type2();
 		}
-
 	}
 
 	void param() {
@@ -78,21 +72,17 @@ public class Parser {
 	}
 
 	void param2() {
-
 		if (token.categ == Categories.prVoid) {
-			System.out.print("PARAM2 -> ‘prVoid’(void) ");
+			System.out.println("PARAM2 -> ‘prVoid’(void) ‘fcPar'())");
 			nextToken();
 		} else {
-			System.out.print("PARAM2 ->  PARAMLIST ");
+			System.out.println("PARAM2 ->  PARAMLIST ‘fcPar'())");
 			paramList();
 		}
+		
 		if (token.categ == Categories.fcPar) {
-			System.out.println("‘fcPar'(')')");
 			nextToken();
-
-		} else {
-			error(1);
-		}
+		} else error(1);
 
 	}
 
@@ -121,10 +111,8 @@ public class Parser {
 	}
 
 	void exp2Aux() {
-
 		if (token.categ == Categories.opDisj) {
 			System.out.println("EXP2AUX -> 'opDisj'(||) EXPCOMP EXP2AUX ");
-			;
 			nextToken();
 			expComp();
 			exp2Aux();
@@ -132,7 +120,6 @@ public class Parser {
 			System.out.println("EXP2AUX -> epsilon");
 			return;
 		}
-
 	}
 
 	void expComp() {
@@ -142,7 +129,6 @@ public class Parser {
 	}
 
 	void expComp2() {
-
 		if (token.categ == Categories.opIg || token.categ == Categories.opDif) {
 			System.out.println("EXPCOMP2 -> EXPCOMPAUX EXPCOMP2 ");
 			expCompAux();
@@ -151,11 +137,9 @@ public class Parser {
 			System.out.println("EXPCOMP2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void expCompAux() {
-
 		if (token.categ == Categories.opIg) {
 			System.out.println("EXPCOMPAUX -> 'opIg'(==) RELEXP ");
 			nextToken();
@@ -164,8 +148,7 @@ public class Parser {
 			System.out.println("EXPCOMPAUX -> 'opDif'(!=) RELEXP");
 			nextToken();
 			relExp();
-		} else
-			error(2);
+		} else error(2);
 	}
 
 	void relExp() {
@@ -175,44 +158,35 @@ public class Parser {
 	}
 
 	void relExp2() {
-
-		if (token.categ == Categories.opMai || token.categ == Categories.opMa || token.categ == Categories.opMei
-				|| token.categ == Categories.opMe) {
+		if (token.categ == Categories.opMai || token.categ == Categories.opMa 
+				|| token.categ == Categories.opMei || token.categ == Categories.opMe) {
 			System.out.println("RELEXP2 -> RELEXPAUX  RELEXP2");
 			relExpAux();
 			relExp2();
-
 		} else {
 			System.out.println("RELEXP2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void relExpAux() {
-
 		if (token.categ == Categories.opMai) {
 			System.out.println("RELEXPAUX -> 'opMai'(>=) NUMEXP");
 			nextToken();
 			numExp();
-
 		} else if (token.categ == Categories.opMa) {
 			System.out.println("RELEXPAUX -> 'opMa'(>) NUMEXP");
 			nextToken();
 			numExp();
-
 		} else if (token.categ == Categories.opMei) {
 			System.out.println("RELEXPAUX -> 'opMei'(<=) NUMEXP");
 			nextToken();
 			numExp();
-
 		} else if (token.categ == Categories.opMe) {
 			System.out.println("RELEXPAUX -> 'opMe'(<) NUMEXP");
 			nextToken();
 			numExp();
-
-		} else
-			error(3);
+		} else error(3);
 	}
 
 	void numExp() {
@@ -222,8 +196,6 @@ public class Parser {
 	}
 
 	void numExpAux2() {
-		System.out.println("numexpaux2");
-		System.out.println(token.categ);
 		if (token.categ == Categories.opAd || token.categ == Categories.opSub) {
 			System.out.println("NUMEXPAUX2 - > NUMEXPAUX  NUMEXPAUX2");
 			numExpAux();
@@ -232,21 +204,18 @@ public class Parser {
 			System.out.println("NUMEXPAUX2 - > epsilon");
 			return;
 		}
-
 	}
 
 	void numExpAux() {
-
 		if (token.categ == Categories.opAd) {
-			System.out.println("NUMEXPAUX -> ‘opAd’(+) NUMEXP2 ");
+			System.out.println("NUMEXPAUX -> ‘opAd’(+) NUMEXP2");
 			nextToken();
 			numExp2();
 		} else if (token.categ == Categories.opSub) {
-			System.out.println("NUMEXPAUX -> ‘opSub’(-) NUMEXP2 ");
+			System.out.println("NUMEXPAUX -> ‘opSub’(-) NUMEXP2");
 			nextToken();
 			numExp2();
-		} else
-			error(4);
+		} else error(4);
 	}
 
 	void numExp2() {
@@ -256,7 +225,6 @@ public class Parser {
 	}
 
 	void numExp2Aux2() {
-
 		if (token.categ == Categories.opMult || token.categ == Categories.opMod || token.categ == Categories.opDiv) {
 			System.out.println("NUMEXP2AUX2 -> NUMEXP2AUX NUMEXP2AUX2");
 			numExp2Aux();
@@ -265,11 +233,9 @@ public class Parser {
 			System.out.println("NUMEXP2AUX2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void numExp2Aux() {
-
 		if (token.categ == Categories.opMult) {
 			System.out.println("NUMEXP2AUX -> ‘opMult’(*) NUMEXP3");
 			nextToken();
@@ -285,7 +251,6 @@ public class Parser {
 		} else {
 			error(5);
 		}
-
 	}
 
 	void numExp3() {
@@ -300,22 +265,18 @@ public class Parser {
 			System.out.print("‘opSub’(-) ");
 			nextToken();
 		}
-
-		System.out.println("NUMEXP4 -> ");
+		System.out.println("NUMEXP4");
 		numExp4();
-
 	}
 
 	void numExp4() {
-
 		if (token.categ == Categories.abPar) {
+			System.out.println("NUMEXP4 -> ‘abPar’(() EXP  ‘fcPar’())");
 			nextToken();
 			exp();
 			if (token.categ == Categories.fcPar) {
-				System.out.println("NUMEXP4 -> ‘abPar’(() EXP  ‘fcPar’())");
 				nextToken();
-			} else
-				error(6);
+			} else error(6);
 		} else if (token.categ == Categories.id) {
 			System.out.println("NUMEXP4 -> NAME");
 			name();
@@ -331,18 +292,15 @@ public class Parser {
 		} else if (token.categ == Categories.prFalse) {
 			System.out.println("NUMEXP4 -> 'cteInt'(false)");
 			nextToken();
-		} else
-			error(7);
+		} else error(7);
 	}
 
 	void name() {
-
 		if (token.categ == Categories.id) {
-			System.out.println("NAME -> ‘id’ NAME2");
+			System.out.println("NAME -> ‘id’(" + token.getValue() + ") NAME2");
 			nextToken();
 			name2();
-		} else
-			error(8);
+		} else error(8);
 	}
 
 	void name2() {
@@ -355,31 +313,24 @@ public class Parser {
 			if (token.categ == Categories.fcCol) {
 				System.out.println("NAME2 -> ‘abCol’ EXP ‘fcCol’ ");
 				nextToken();
-			} else
-				error(45);
+			} else error(45);
 		} else {
 			System.out.println("NAME2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void paramList() {
-
 		type();
 		type2();
-
 		if (token.categ == Categories.id) {
 			System.out.println("PARAMLIST -> TYPE TYPE2 ‘id’(" + token.getValue() + ") PARAMLIST2");
 			nextToken();
 			paramList2();
-		} else
-			error(9);
-
+		} else error(9);
 	}
 
 	void paramList2() {
-
 		if (token.categ == Categories.sep) {
 			System.out.println("PARAMLIST2 -> ‘sep’(,) PARAMLIST");
 			nextToken();
@@ -388,27 +339,21 @@ public class Parser {
 			System.out.println("PARAMLIST2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void type() {
 		if (token.categ == Categories.prBool) {
 			System.out.println("TYPE -> 'prBool'(bool)");
 			nextToken();
-
 		} else if (token.categ == Categories.prChar) {
 			System.out.println("TYPE -> 'prChar'(char)");
-
 			nextToken();
-
 		} else if (token.categ == Categories.prInt) {
 			System.out.println("TYPE -> 'prInt'(int)");
 			nextToken();
-
 		} else if (token.categ == Categories.prFloat) {
 			System.out.println("TYPE -> 'prFloat'(float)");
 			nextToken();
-
 		} else {
 			System.out.println(token.toString());
 			error(10);
@@ -416,88 +361,83 @@ public class Parser {
 	}
 
 	void type2() {
-
 		if (token.categ == Categories.abCol) {
 			nextToken();
 			if (token.categ == Categories.fcCol) {
 				System.out.println("TYPE2 -> ‘abCol’([) ‘fcCol’(]) ");
 				nextToken();
-			} else
-				error(11);
+			} else error(11);
 		} else {
 			System.out.println("TYPE2 -> epsilon");
 			return;
 		}
-
 	}
 
 	void scope() {
-
 		if (token.categ == Categories.abCh) {
 			System.out.println("SCOPE -> ‘abCh’({) SCOPE2");
 			nextToken();
 			scope2();
-		} else
-			error(13);
+		} else error(13);
 	}
 
 	void scope2() {
-		
-		cmd();
 		if (token.categ == Categories.fcCh) {
+			System.out.println("SCOPE2 -> ‘fcCh’(})");
 			nextToken();
-		}else error(46);
-
+		} else {
+			System.out.println("SCOPE2 -> CMD SCOPE2");
+			cmd();
+			scope2();
+		}
 	}
 
 	void cmd() {
-		
-		if (token.categ == Categories.prBool || token.categ == Categories.prChar || token.categ == Categories.prInt
-				|| token.categ == Categories.prFloat) {
+		if (token.categ == Categories.prBool || token.categ == Categories.prChar 
+				|| token.categ == Categories.prInt || token.categ == Categories.prFloat) {
+			System.out.println("CMD -> DECLARATIONCMD");
 			declarationCmd();
-			cmd();
+			//cmd();
 		} else if (token.categ == Categories.id) {
+			System.out.println("CMD -> ‘id’(" + token.getValue() + ") CMD2 ");
 			nextToken();
-			System.out.println(token.getValue());
 			cmd2();
-			cmd();
+			//cmd();
 		} else if (token.categ == Categories.prIf) {
+			System.out.println("CMD -> IFELSECMD");
 			ifelseCmd();
-			cmd();
+			//cmd();
 		} else if (token.categ == Categories.prWhile) {
+			System.out.println("CMD -> WHILECMD");
 			whileCmd();
-			cmd();
+			//cmd();
 		} else if (token.categ == Categories.prFor) {
+			System.out.println("CMD -> FORCMD");
 			forCmd();
-			cmd();
+			//cmd();
 		} else if (token.categ == Categories.prRet) {
+			System.out.println("CMD -> RETURNCMD");
 			returnCmd();
-			cmd();
-		} else
-			return;
+			//cmd();
+		} else error(45);
 	}
 
 	void cmd2() {
-		System.out.println("cmd2");
-		System.out.println(token.categ);
-		System.out.println(token.getValue());
 		if (token.categ == Categories.abPar) {
+			System.out.println("CMD2 -> FUNCCALLCMD ‘term’(;)");
 			funccallCmd();
+ 		} else if (token.categ == Categories.opAtr) {
+ 			System.out.println("CMD2 -> ATTRCMD ‘term’");
+			attrCmd();
 		} else if (token.categ == Categories.abCol) {
+			System.out.println("CMD2 -> ‘abCol’([) EXP ‘fcCol’(]) ATTRCMD ‘term’");
 			nextToken();
 			exp();
-
 			if (token.categ == Categories.fcCol) {
 				nextToken();
 				attrCmd();
-			} else
-				error(15);
-
-		} else if (token.categ == Categories.opAtr) {
-			attrCmd();
-		} else
-			error(16);
-
+			} else error(15);
+		} else error(16);
 		if (token.categ == Categories.term) {
 			nextToken();
 		} else {
@@ -507,183 +447,150 @@ public class Parser {
 	}
 
 	void declarationCmd() {
-		System.out.println("declarationcmd");
-		System.out.println(token.categ);
+		System.out.println("DECLARATIONCMD -> TYPE DECLARATIONCMD2 ‘term’(;)");
 		type();
 		declarationCmd2();
 		if (token.categ == Categories.term) {
-			System.out.println("aqui");
 			nextToken();
-		} else
-			error(39);
+		} else error(39);
 	}
 
 	void declarationCmd2() {
-		System.out.println("declarationcmd2");
-		System.out.println(token.categ);
 		if (token.categ == Categories.id) {
+			System.out.println("DECLARATIONCMD2 -> ‘id’(" + token.getValue() + ") DECLARATIONCMD3");
 			nextToken();
 			declarationCmd3();
-		} else if (token.categ == Categories.abCol)
+		} else if (token.categ == Categories.abCol) {
+			System.out.println("DECLARATIONCMD2 -> ARRAYDEC");
 			arrayDec();
-		else
-			error(17);
+		} else error(17);
 	}
 
 	void declarationCmd3() {
-		System.out.println("declaratoincmd3");
-		System.out.println(token.categ);
 		if (token.categ == Categories.opAtr) {
-			// atribuição é operador
+			System.out.println("DECLARATIONCMD3 -> ATTRCMD");
 			attrCmd();
-		} else
+		} else {
+			System.out.println("DECLARATIONCMD3 -> epsilon");
 			return;
+		}
 	}
 
 	void arrayDec() {
-		System.out.println("arraydec");
-		System.out.println(token.categ);
+		System.out.println("ARRAYDEC -> ‘abCol’([) EXP ‘fcCol’(]) ‘id’ ARRAYDEC2");
 		if (token.categ == Categories.abCol) {
 			nextToken();
 			exp();
-			if (token.categ == Categories.fcCol)
+			if (token.categ == Categories.fcCol) {
 				nextToken();
-			else
-				error(18);
-
-			if (token.categ == Categories.id)
+			} else error(18);
+			if (token.categ == Categories.id) {
 				nextToken();
-			else
-				error(19);
-
+			} else error(19);
 			arrayDec2();
-		} else
-			error(20);
+		} else error(20);
 	}
 
 	void arrayDec2() {
-		System.out.println("arraydec2");
-		System.out.println(token.categ);
+		System.out.println("ARRAYDEC2 -> ARRAYATTRCMD");
 		if (token.categ == Categories.opAtr)
 			arrayAttrCmd();
-		else
+		else {
+			System.out.println("ARRAYDEC2 -> epsilon");
 			return;
+		}
 	}
 
 	void attrCmd() {
-		System.out.println("attrcmd");
-		System.out.println(token.categ);
+		System.out.println("ATTRCMD -> 'opAtrib'(=) EXP");
 		if (token.categ == Categories.opAtr) {
 			nextToken();
 			exp();
-		} else
-			error(21);
+		} else error(21);
 	}
 
 	void arrayAttrCmd() {
-		System.out.println("arrayattrcmd");
-		System.out.println(token.categ);
+		System.out.println("ARRAYATTRCMD -> ‘opAtrib’(=) ARRAYINIT");
 		if (token.categ == Categories.opAtr) {
 			nextToken();
 			arrayInit();
-		} else
-			error(22);
+		} else error(22);
 	}
 
 	void arrayInit() {
-		System.out.println("arrayinit");
-		System.out.println(token.categ);
+		System.out.println("ARRAYINIT -> ‘abCh’({) ELEM ‘fcCh’(})");
 		if (token.categ == Categories.abCh) {
 			nextToken();
 			elem();
-			if (token.categ == Categories.fcCh)
+			if (token.categ == Categories.fcCh) {
 				nextToken();
-			else
-				error(23);
-		} else
-			error(24);
+			} else error(23);
+		} else error(24);
 	}
 
 	void elem() {
-		System.out.println("elem");
-		System.out.println(token.categ);
+		System.out.println("ELEM -> EXP ELEM2");
 		exp();
 		elem2();
 	}
 
 	void elem2() {
-		System.out.println("elem2");
-		System.out.println(token.categ);
 		if (token.categ == Categories.sep) {
+			System.out.println("ELEM2 -> ‘sep’ ELEM");
 			nextToken();
 			elem();
-		} else
+		} else {
+			System.out.println("ELEM2 -> epsilon");
 			return;
-	}
-
-	void constant() {
-		System.out.println("constant");
-		System.out.println(token.categ);
-		if (token.categ == Categories.cteCh || token.categ == Categories.cteFloat || token.categ == Categories.cteInt
-				|| token.categ == Categories.cteStr) {
-			nextToken();
-		} else
-			error(25);
+		}
 	}
 
 	void funccallCmd() {
-		System.out.println("funcallcmd");
-		System.out.println(token.categ);
 		if (token.categ == Categories.abPar) {
+			System.out.println("FUNCCALLCMD -> ‘abPar’(() FUNCCALLCMD2");
 			nextToken();
 			funccallCmd2();
-		} else
-			error(26);
+		} else error(26);
 	}
 
 	void funccallCmd2() {
-		if (token.categ != Categories.fcPar)
-			funccallParamList();
-
-		if (token.categ == Categories.fcPar)
+		if (token.categ == Categories.fcPar) {
+			System.out.println("FUNCCALLCMD2 -> ‘fcPar’(()");
 			nextToken();
-		else
-			error(27);
+		} else {
+			System.out.println("FUNCCALLCMD2 -> FUNCCALLPARAMLIST ‘fcPar’(()");
+			funccallParamList();
+			if (token.categ == Categories.fcPar) {
+				nextToken();
+			} else error(27);
+		}
 	}
 
 	void funccallParamList() {
-		System.out.println("funccallParamlist");
-		System.out.println(token.categ);
+		System.out.println("FUNCCALLPARAMLIST -> EXP FUNCCALLPARAMLIST2");
 		exp();
 		funccallParamList2();
 	}
 
 	void funccallParamList2() {
-		System.out.println("funccallParamlist2");
-		System.out.println(token.categ);
 		if (token.categ == Categories.sep) {
+			System.out.println("FUNCCALLPARAMLIST2 -> ‘sep’(,) FUNCCALLPARAMLIST");
 			nextToken();
 			funccallParamList();
-		} else
+		} else {
+			System.out.println("FUNCCALLPARAMLIST2 -> epsilon");
 			return;
+		}
 	}
 
-	/*
-	 * void funccallParam(){ if(token.categ == Categories.id) id(); else exp();
-	 * }
-	 */
-
 	void ifelseCmd() {
-		System.out.println("ifelsecmd");
-		System.out.println(token.categ);
+		System.out.println("IFELSECMD -> IFCMD ELSEIFCMD");
 		ifCmd();
 		elseifCmd();
-
 	}
 
 	void ifCmd() {
-		System.out.println("ifcmd");
-		System.out.println(token.categ);
+		System.out.println("IFCMD -> ‘prIf’(if) ‘abPar’(() EXP ‘fcPar’()) SCOPE");
 		if (token.categ == Categories.prIf) {
 			nextToken();
 			if (token.categ == Categories.abPar) {
@@ -692,46 +599,39 @@ public class Parser {
 				if (token.categ == Categories.fcPar) {
 					nextToken();
 					scope();
-				} else
-					error(28);
-			} else
-				error(29);
-		} else
-			error(30);
+				} else error(28);
+			} else error(29);
+		} else error(30);
 	}
 
 	void elseifCmd() {
-		System.out.println("elseifcmd");
-		System.out.println(token.categ);
+		System.out.println("ELSEIFCMD -> 'prElse'(else) ELSEIFCMD2");
 		if (token.categ == Categories.prElse) {
 			nextToken();
 			elseifCmd2();
-		} else
+		} else {
+			System.out.println("ELSEIFCMD -> epsilon");
 			return;
+		}
 	}
 
 	void elseifCmd2() {
-		System.out.println("elseifcmd2");
-		System.out.println(token.categ);
 		if (token.categ == Categories.prIf) {
+			System.out.println("ELSEIFCMD2 -> IFELSECMD");
 			ifelseCmd();
-			// ifCmd();
-			// elseifCmd();
-		} else if (token.categ == Categories.abCh)
+		} else if (token.categ == Categories.abCh) {
+			System.out.println("ELSEIFCMD2 -> ELSECMD");
 			elseCmd();
-		else
-			error(32);
+		} else error(32);
 	}
 
 	void elseCmd() {
-		System.out.println("elsecmd");
-		System.out.println(token.categ);
+		System.out.println("ELSECMD -> SCOPE");
 		scope();
 	}
 
 	void whileCmd() {
-		System.out.println("whilecmd");
-		System.out.println(token.categ);
+		System.out.println("WHILECMD  -> ‘prWhile’(while) ‘abPar’(() EXP ‘fcPar’()) SCOPE");
 		if (token.categ == Categories.prWhile) {
 			nextToken();
 			if (token.categ == Categories.abPar) {
@@ -741,69 +641,48 @@ public class Parser {
 					nextToken();
 					scope();
 				}
-
-				else
-					error(33);
-			} else
-				error(34);
-		} else
-			error(35);
+				else error(33);
+			} else error(34);
+		} else error(35);
 	}
 
 	void forCmd() {
-		System.out.println("forcmd");
-		System.out.println(token.categ);
 		if (token.categ == Categories.prFor) {
 			nextToken();
 			if (token.categ == Categories.abPar) {
 				nextToken();
-				if (token.categ == Categories.id)
+				if (token.categ == Categories.id) {
+					System.out.println("FORCMD -> ‘prFor’(for) ‘abPar’(() ‘id’(" + token.getValue() + 
+							") ‘term’(;) EXP ‘term’(;) ‘ctetInt’ ‘fcPar’()) SCOPE");
 					nextToken();
-				else
-					error(46);
+				} else error(46);
 				attrCmd();
-				if (token.categ == Categories.term)
+				if (token.categ == Categories.term) {
 					nextToken();
-				else
-					error(42);
+				} else error(42);
 				exp();
-				if (token.categ == Categories.term)
+				if (token.categ == Categories.term) {
 					nextToken();
-				else {
-					System.out.println(token.toString());
-					error(43);
-				}
-
-				if (token.categ == Categories.cteInt)
+				} else error(43);
+				if (token.categ == Categories.cteInt) {
 					nextToken();
-				else
-					error(44);
-				if (token.categ == Categories.fcPar)
+				} else error(44);
+				if (token.categ == Categories.fcPar) {
 					nextToken();
-				else
-					error(45);
+				} else error(45);
 				scope();
-			} else
-				error(41);
-		} else
-			error(36);
+			} else error(41);
+		} else error(36);
 	}
 
 	void returnCmd() {
-		System.out.println("returncmd");
-		System.out.println(token.categ);
+		System.out.println("RETURNCMD -> ‘prReturn’(return) EXP ‘term’(;)");
 		if (token.categ == Categories.prRet) {
 			nextToken();
 			exp();
 			if (token.categ == Categories.term) {
 				nextToken();
-
-			} else {
-				error(37);
-			}
-
-		} else
-			error(38);
+			} else error(37);
+		} else error(38);
 	}
-
 }
